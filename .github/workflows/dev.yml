@@ -22,4 +22,11 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    
+    - name: Login to DockerHub Registry
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+    - name: Get the version
+        run: echo ::set-output name=tag::dev
+    - name: Build the tagged Docker image
+        run: docker build . --file Dockerfile --tag tooncr/lab6:dev
+    - name: Push the tagged Docker image
+        run: docker push tooncr/lab6:dev
